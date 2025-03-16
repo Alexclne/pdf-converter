@@ -65,8 +65,3 @@ All dependencies are listed in `requirements.txt` and can be installed using:
 ```bash
 pip install -r requirements.txt
 ```
-
-## 📬 Contact
-For any questions or suggestions, feel free to reach out!
-- **Email:** your-email@example.com
-- **GitHub:** [Your GitHub Profile](https://github.com/your-profile)
