@@ -17,7 +17,7 @@ The project also includes a **GUI interface using Tkinter**, allowing users to s
 ## Installation
 ### **Clone the repository**
 ```
-git clone https://github.com/your-repo/file-converter-to-pdf.git
+git clone (https://github.com/Alexclne/pdf-converter.git)
 cd file-converter-to-pdf
 ```
 
