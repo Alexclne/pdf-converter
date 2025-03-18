@@ -17,7 +17,7 @@ The project also includes a **GUI interface using Tkinter**, allowing users to s
 ## Installation
 ### **Clone the repository**
 ```
-git clone https://github.com/your-repo/file-converter-to-pdf.git
+git clone (https://github.com/Alexclne/pdf-converter.git)
 cd file-converter-to-pdf
 ```
 
@@ -65,8 +65,3 @@ All dependencies are listed in `requirements.txt` and can be installed using:
 ```bash
 pip install -r requirements.txt
 ```
-
-## 📬 Contact
-For any questions or suggestions, feel free to reach out!
-- **Email:** your-email@example.com
-- **GitHub:** [Your GitHub Profile](https://github.com/your-profile)
