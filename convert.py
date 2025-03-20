@@ -8,12 +8,15 @@ import docx
 import pandas as pd
 from pptx import Presentation
 
+
+FONT_PATH = os.path.join(os.path.dirname(__file__), "DejaVuSans.ttf")
 # Funzioni di conversione
 def txt_to_pdf(input_path, output_path):
     pdf = FPDF()
     pdf.set_auto_page_break(auto=True, margin=15)
     pdf.add_page()
-    pdf.set_font("Arial", size=12)
+    pdf.add_font("DejaVu", "", FONT_PATH, uni=True)
+    pdf.set_font("DejaVu", "", 12)
 
     with open(input_path, "r", encoding="utf-8") as file:
         for line in file:
@@ -30,19 +33,78 @@ def docx_to_pdf(input_path, output_path):
     pdf = FPDF()
     pdf.set_auto_page_break(auto=True, margin=15)
     pdf.add_page()
-    pdf.set_font("Arial", size=12)
+    pdf.add_font("DejaVu", "", FONT_PATH, uni=True)
+    pdf.set_font("DejaVu", "", 12)
+
+    temp_dir = os.path.join(os.path.dirname(output_path), "temp_images")
+    os.makedirs(temp_dir, exist_ok=True)
+
+    y_position = 10 
 
     for para in doc.paragraphs:
-        pdf.cell(200, 10, txt=para.text, ln=True)
+        # Controllare lo stile del paragrafo
+        if para.style.name.startswith("Heading"):
+            pdf.set_font("DejaVu", "B", 14)  
+            pdf.set_font("DejaVu", "", 12)
+
+        
+        line = ""
+        for run in para.runs:
+            if run.bold:
+                pdf.set_font("DejaVu", "B", 12)  
+            elif run.italic:
+                pdf.set_font("DejaVu", "I", 12)  
+            else:
+                pdf.set_font("DejaVu", "", 12)
+
+            line += run.text
+
+        pdf.multi_cell(0, 10, line)  
+        y_position += 10
+
+    
+    for rel in doc.part.rels:
+        if "image" in doc.part.rels[rel].target_ref:
+            img_part = doc.part.rels[rel].target_part
+            img_data = img_part.blob
+            img_path = os.path.join(temp_dir, f"image_{rel}.png")
+
+            with open(img_path, "wb") as img_file:
+                img_file.write(img_data)
+
+            
+            if y_position + 50 > 270:
+                pdf.add_page()
+                y_position = 10
+
+       
+            pdf.image(img_path, x=10, y=y_position, w=100)
+            y_position += 60  
+
+    for table in doc.tables:
+        pdf.add_page()
+        pdf.set_font("DejaVu", "B", 12)
+        pdf.cell(200, 10, "Tabella", ln=True)
+        pdf.set_font("DejaVu", "", 12)
+
+        for row in table.rows:
+            row_text = [cell.text.strip() for cell in row.cells]
+            pdf.cell(200, 10, " | ".join(row_text), ln=True)
 
     pdf.output(output_path)
+
+    for img_file in os.listdir(temp_dir):
+        os.remove(os.path.join(temp_dir, img_file))
+    os.rmdir(temp_dir)
+
 
 def excel_to_pdf(input_path, output_path):
     df = pd.read_excel(input_path)
     pdf = FPDF()
     pdf.set_auto_page_break(auto=True, margin=15)
     pdf.add_page()
-    pdf.set_font("Arial", size=10)
+    pdf.add_font("DejaVu", "", FONT_PATH, uni=True)
+    pdf.set_font("DejaVu", "", 12)
 
     for _, row in df.iterrows():
         pdf.cell(200, 10, txt=str(row.values), ln=True)
@@ -54,7 +116,8 @@ def pptx_to_pdf(input_path, output_path):
     pdf = FPDF()
     pdf.set_auto_page_break(auto=True, margin=15)
     pdf.add_page()
-    pdf.set_font("Arial", size=12)
+    pdf.add_font("DejaVu", "", FONT_PATH, uni=True)
+    pdf.set_font("DejaVu", "", 12)
 
     for slide in prs.slides:
         for shape in slide.shapes:
