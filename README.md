@@ -62,6 +62,11 @@ This project requires the following Python libraries:
 - `tkinter` → For the graphical user interface
 
 All dependencies are listed in `requirements.txt` and can be installed using:
-```bash
+```
 pip install -r requirements.txt
+```
+```
+For create a .exe run this command:
+
+    pyinstaller --onefile --windowed --icon=icon.ico --add-data "DejaVuSans.ttf;." convert.py
 ```
